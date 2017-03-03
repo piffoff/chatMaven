@@ -2,6 +2,8 @@ package Server;
 
 import java.sql.*;
 
+import static Server.ConstantMeneger.*;
+
 /**
  * Класс отвечает за свясь с базой данных
  */
@@ -11,29 +13,32 @@ public class SQLHandler {
 
     public static void connect() {                      // подключение к БД
         try {
-            Class.forName("org.sqlite.JDBC");           // регистрация драйвера
-            conn = DriverManager.getConnection("jdbc:sqlite:ClientsDB.db"); // открытие соединения
+           // Class.forName("org.sqlite.JDBC");           // регистрация драйвера
+            DriverManager.registerDriver(new org.postgresql.Driver());
+            conn = DriverManager.getConnection(dbUrl, user, password);
+            System.out.println("postgresql database connected successful");
         } catch (Exception c) {
-            System.out.println("Ошибка соединения с базой данных");
+            System.out.println("Ошибка открытия соединения с базой данных");
         }
     }
 
     public static void disconnect() {                  // отключение от БД
         try {
             conn.close();                              // закрываем соединение
+            System.out.println("Posgresql database successful disconected");
         } catch (Exception c) {
-            System.out.println("Ошибка соединения с базой данных");
+            System.out.println("Ошибка закрытия соединения с базой данных");
         }
     }
-    // поиск ника по логину/паролю
+
     public static String getNickByLoginPassword(String login, String password) {
         String w = null;
         try {
             // формируем запрос на выборку ника по логину/паролю
-            stmt = conn.prepareStatement("SELECT Nickname FROM main WHERE Login = ? AND Password = ?;");
-            stmt.setString(1, login);                      // указываем логин в запросе
-            stmt.setString(2, password);              // указываем пароль в запросе
-            ResultSet rs = stmt.executeQuery(); // выполняем запрос и получаем результат
+            stmt = conn.prepareStatement(SQLSelect);
+            stmt.setString(1, login);
+            stmt.setString(2, password);
+            ResultSet rs = stmt.executeQuery();         // выполняем запрос и получаем результат
             if(rs.next())
                 w = rs.getString("Nickname");
 
