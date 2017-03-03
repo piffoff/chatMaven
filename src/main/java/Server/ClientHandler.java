@@ -9,7 +9,7 @@ import java.net.Socket;
  * Объект хадлер
  */
 public class ClientHandler implements Runnable {
-    Server owner; // ссылка на сервер, на котором работает ClientHandler
+    Server owner; //ссылка на сервер, на котором работает ClientHandler
     Socket s;
     DataOutputStream out;
     DataInputStream in;
