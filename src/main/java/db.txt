@@ -1,3 +1,4 @@
+
 CREATE TABLE main
 (
     login       character varying(100),
